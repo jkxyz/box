@@ -5,25 +5,33 @@
 
   system.stateVersion = "22.11";
 
-  users.users.josh = {
-    isNormalUser = true;
-    password = "test";
-    extraGroups = [ "wheel" ];
-  };
+  boot.loader.grub.enable = false;
 
-  services.nginx = {
-    enable = true;
+  users.mutableUsers = false;
+  users.users.root.password = "";
 
-    virtualHosts."localhost" = { root = "${inputs.self}/site"; };
-  };
+  services.sshd.enable = true;
+  services.openssh.permitRootLogin = "yes";
 
-  virtualisation.forwardPorts = [{
-    from = "host";
-    host.port = 3000;
-    guest.port = 80;
-  }];
+  networking.firewall.allowedTCPPorts = [ 22 80 ];
 
   virtualisation.graphics = false;
 
-  networking.firewall.allowedTCPPorts = [ 80 ];
+  virtualisation.forwardPorts = [
+    {
+      from = "host";
+      host.port = 3000;
+      guest.port = 80;
+    }
+    {
+      from = "host";
+      host.port = 3022;
+      guest.port = 22;
+    }
+  ];
+
+  services.nginx = {
+    enable = true;
+    virtualHosts."localhost" = { root = "${inputs.self}/site"; };
+  };
 }

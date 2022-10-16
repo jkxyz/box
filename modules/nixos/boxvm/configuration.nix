@@ -19,5 +19,7 @@
     guest.port = 80;
   }];
 
+  virtualisation.graphics = false;
+
   networking.firewall.allowedTCPPorts = [ 80 ];
 }

@@ -11,7 +11,11 @@
     extraGroups = [ "wheel" ];
   };
 
-  services.nginx.enable = true;
+  services.nginx = {
+    enable = true;
+
+    virtualHosts."localhost" = { root = "${inputs.self}/site"; };
+  };
 
   virtualisation.forwardPorts = [{
     from = "host";
